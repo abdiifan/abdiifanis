@@ -1,14 +1,12 @@
  /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', '@polymarket/clob-client']
-  },
-  webpack: (config) => {
-    config.externals.push('pino-pretty', 'lokijs', 'encoding');
-    return config;
-  }
-};
+  // Removed deprecated options
+  serverExternalPackages: [
+    '@polymarket/clob-client',
+    // Add any other packages that need to run only on the server here
+  ],
+  // swcMinify is now enabled by default and cannot be disabled this way
+}
 
-export default nextConfig;
+export default nextConfig
