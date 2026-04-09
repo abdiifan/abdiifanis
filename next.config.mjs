@@ -1,12 +1,28 @@
- /** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Removed deprecated options
+
+  // Opt out specific server-only packages from bundling
+  // This tells Next.js to use native Node.js `require()` instead of bundling them
   serverExternalPackages: [
     '@polymarket/clob-client',
-    // Add any other packages that need to run only on the server here
+    'ethers',                    // often needed alongside Polymarket client
+    // Add more if you get "Cannot find module" or bundling errors:
+    // 'node-telegram-bot-api',
   ],
-  // swcMinify is now enabled by default and cannot be disabled this way
+
+  // Recommended for production / Docker deployments
+  output: 'standalone',
+
+  // Optional: Increase body size limit if you send large payloads (e.g., Claude responses)
+  // experimental: {
+  //   serverComponentsHmrCache: true, // already default in newer Next
+  // },
+
+  // If you use API routes that take time (Claude calls, scanning, etc.)
+  // httpAgentOptions: {
+  //   keepAlive: true,
+  // },
 }
 
-export default nextConfig
+module.exports = nextConfig
