@@ -1,0 +1,164 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Balance tracking with historical snapshots
+model Balance {
+  id                Int      @id @default(autoincrement())
+  totalBalance      Float    // Current total balance
+  polymarketBalance Float    // Allocated to Polymarket
+  coinBalance       Float    // Allocated to coin trading
+  pnlToday          Float    @default(0)
+  pnlAllTime        Float    @default(0)
+  dailyDrawdown     Float    @default(0)
+  lastUpdated       DateTime @default(now())
+  createdAt         DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Polymarket positions and trades
+model PolymarketPosition {
+  id              String   @id @default(cuid())
+  marketId        String
+  marketTitle     String
+  outcomeTitle    String
+  side            String   // BUY or SELL
+  size            Float    // Position size in USD
+  price           Float    // Entry price
+  entryTimestamp  DateTime @default(now())
+  exitTimestamp   DateTime?
+  exitPrice       Float?
+  status          String   // OPEN, CLOSED, CANCELLED
+  pnl             Float    @default(0)
+  fees            Float    @default(0)
+  edgePercent     Float    // Calculated edge at entry
+  claudeReasoning String?  // Claude's decision reasoning
+  isRealMoney     Boolean  @default(false)
+  
+  @@index([status])
+  @@index([entryTimestamp])
+  @@index([marketId])
+}
+
+// Polymarket scan results for tracking opportunities
+model PolymarketScan {
+  id              String   @id @default(cuid())
+  marketId        String
+  marketTitle     String
+  outcomeTitle    String
+  bestBidPrice    Float
+  bestAskPrice    Float
+  spread          Float
+  volume24h       Float
+  claudeProbability Float?
+  calculatedEdge  Float?
+  action          String   // TRADE, SKIP, MONITOR
+  reason          String?
+  timestamp       DateTime @default(now())
+  
+  @@index([timestamp])
+  @@index([marketId])
+}
+
+// Coin alerts from scanner
+model CoinAlert {
+  id              String   @id @default(cuid())
+  contractAddress String
+  symbol          String
+  name            String
+  chain           String   // solana, base, ethereum
+  dex             String   // pump.fun, raydium, uniswap, etc.
+  priceUsd        Float
+  marketCapUsd    Float
+  volumeUsd24h    Float
+  volumeSpike     Float    // Percentage spike
+  liquidityUsd    Float
+  holderCount     Int?
+  whaleActivity   String?  // Description of whale buys
+  rugRiskScore    Float    // 0-100, lower is safer
+  suggestedSize   Float    // Suggested entry size in USD
+  claudeAnalysis  String?  // Claude's assessment
+  alertType       String   // WHALE_BUY, VOLUME_SPIKE, NEW_POOL, etc.
+  priority        String   // HIGH, MEDIUM, LOW
+  telegramSent    Boolean  @default(false)
+  timestamp       DateTime @default(now())
+  
+  @@index([timestamp])
+  @@index([chain])
+  @@index([priority])
+  @@index([contractAddress])
+}
+
+// Manual coin trades (user executed based on alerts)
+model CoinTrade {
+  id              String   @id @default(cuid())
+  alertId         String?  // Reference to alert that triggered this
+  contractAddress String
+  symbol          String
+  chain           String
+  entryPrice      Float
+  entrySize       Float    // Size in USD
+  exitPrice       Float?
+  exitTimestamp   DateTime?
+  pnl             Float    @default(0)
+  status          String   // OPEN, CLOSED
+  notes           String?
+  timestamp       DateTime @default(now())
+  
+  @@index([status])
+  @@index([timestamp])
+  @@index([contractAddress])
+}
+
+// System settings and configuration
+model Settings {
+  id                          Int      @id @default(autoincrement())
+  polymarketEnabled           Boolean  @default(true)
+  coinScannerEnabled          Boolean  @default(true)
+  polymarketPaperMode         Boolean  @default(true)
+  polymarketAllocationPercent Float    @default(60)
+  coinAllocationPercent       Float    @default(40)
+  polymarketMaxPositionPercent Float   @default(8)
+  polymarketMinEdgePercent    Float    @default(12)
+  coinMaxSuggestedSize        Float    @default(5)
+  dailyDrawdownLimit          Float    @default(15)
+  telegramEnabled             Boolean  @default(true)
+  lastUpdated                 DateTime @default(now())
+  
+  @@index([lastUpdated])
+}
+
+// System logs and events
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String   // INFO, WARNING, ERROR, CRITICAL
+  category  String   // POLYMARKET, COIN_SCANNER, RISK, SYSTEM
+  message   String
+  data      String?  // JSON stringified additional data
+  timestamp DateTime @default(now())
+  
+  @@index([level])
+  @@index([category])
+  @@index([timestamp])
+}
+
+// Performance snapshots for charting
+model PerformanceSnapshot {
+  id                Int      @id @default(autoincrement())
+  totalBalance      Float
+  polymarketBalance Float
+  coinBalance       Float
+  pnlToday          Float
+  pnlAllTime        Float
+  openPositions     Int
+  timestamp         DateTime @default(now())
+  
+  @@index([timestamp])
+}

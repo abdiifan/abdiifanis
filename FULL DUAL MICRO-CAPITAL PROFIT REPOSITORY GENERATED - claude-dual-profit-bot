@@ -1,0 +1,91 @@
+claude-dual-profit-bot/
+├── .env.example
+├── .gitignore
+├── README.md
+├── package.json
+├── tsconfig.json
+├── next.config.mjs
+├── tailwind.config.ts
+├── postcss.config.js
+├── components.json
+├── prisma/
+│   └── schema.prisma
+├── public/
+│   └── logo.svg
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── globals.css
+│   │   ├── api/
+│   │   │   ├── cron/
+│   │   │   │   └── route.ts
+│   │   │   ├── polymarket/
+│   │   │   │   ├── scan/route.ts
+│   │   │   │   ├── trade/route.ts
+│   │   │   │   └── positions/route.ts
+│   │   │   ├── coins/
+│   │   │   │   ├── scan/route.ts
+│   │   │   │   └── alerts/route.ts
+│   │   │   ├── balance/
+│   │   │   │   └── route.ts
+│   │   │   ├── settings/
+│   │   │   │   └── route.ts
+│   │   │   └── health/
+│   │   │       └── route.ts
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── tabs.tsx
+│   │   │   ├── slider.tsx
+│   │   │   ├── switch.tsx
+│   │   │   ├── badge.tsx
+│   │   │   ├── alert.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   └── separator.tsx
+│   │   ├── dashboard/
+│   │   │   ├── header.tsx
+│   │   │   ├── balance-card.tsx
+│   │   │   ├── capital-allocator.tsx
+│   │   │   ├── polymarket-tab.tsx
+│   │   │   ├── coin-scanner-tab.tsx
+│   │   │   ├── performance-chart.tsx
+│   │   │   └── risk-controls.tsx
+│   ├── lib/
+│   │   ├── prisma.ts
+│   │   ├── anthropic.ts
+│   │   ├── telegram.ts
+│   │   ├── env.ts
+│   │   ├── utils.ts
+│   │   ├── polymarket/
+│   │   │   ├── client.ts
+│   │   │   ├── scanner.ts
+│   │   │   ├── trader.ts
+│   │   │   └── edge-calculator.ts
+│   │   ├── coins/
+│   │   │   ├── dex-screener.ts
+│   │   │   ├── birdeye.ts
+│   │   │   ├── scanner.ts
+│   │   │   └── risk-analyzer.ts
+│   │   ├── risk/
+│   │   │   ├── balance-tracker.ts
+│   │   │   ├── position-sizer.ts
+│   │   │   ├── safety-checks.ts
+│   │   │   └── drawdown-monitor.ts
+│   │   ├── prompts/
+│   │   │   ├── polymarket-decision.txt
+│   │   │   ├── coin-analysis.txt
+│   │   │   └── risk-assessment.txt
+│   │   └── jobs/
+│   │       ├── polymarket-job.ts
+│   │       └── coin-scanner-job.ts
+│   ├── hooks/
+│   │   ├── use-balance.ts
+│   │   ├── use-positions.ts
+│   │   ├── use-alerts.ts
+│   │   └── use-settings.ts
+│   └── store/
+│       └── app-store.ts
