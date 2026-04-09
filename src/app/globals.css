@@ -47,18 +47,17 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Custom scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -76,7 +75,7 @@
   @apply bg-muted-foreground/50;
 }
 
-/* Animations */
+/* Custom Animations */
 @keyframes pulse-slow {
   0%, 100% {
     opacity: 1;
